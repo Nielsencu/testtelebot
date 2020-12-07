@@ -17,6 +17,8 @@
     $ pip install -r requirements.txt
     ```
 
+ 1. Initialize environment variable (create a `.env` file based on `example.env`)
+
  1. Setup database
     ```
     $ python setup.py
@@ -49,3 +51,4 @@
     ```
     $ deactivate
     ```
+
