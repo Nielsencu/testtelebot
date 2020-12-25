@@ -4,7 +4,7 @@ Base = declarative_base()
 
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy_imageattach.entity import Image, image_attachment
-from sq1alchemy.orm import relationship
+
 
 
 class User(Base):
@@ -29,6 +29,6 @@ class FoodImage(Base, Image):
     """Food Image model"""
     __tablename__ = 'food_image'
 
-    foodset_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-    foodset = relationship('FoodSet')
+    foodset_id = Column(Integer, ForeignKey('food_set.id'), primary_key=True)
+
 
