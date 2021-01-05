@@ -4,17 +4,19 @@ load_dotenv()
 import os
 TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode)
+from telegram import (ParseMode)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler,
                           ConversationHandler)
-from responses import (welcome_text, menu_text, menuItem_text)
+from responses import (welcome_text)
 from keyboardmarkups import start_options
-from handlers import (handle_menu, handle_menu_item, handle_home, handle_help, handle_cumulativerating)
+from handlers import (handle_menu, handle_menu_item, handle_home, handle_help, handle_cumulativerating, handle_rating,handle_rating_number)
 
 from config import SQL_SESSION
 session = SQL_SESSION
 
-from models import *
+from models import FoodSet, User, FoodImage
+
+from mockdata import data
 
 MAIN = range(0)
 
@@ -26,6 +28,10 @@ def start(update, context):
     user = User(tele_id=user_id, tele_handle=username, name=fullname)
 
     session.add(user)
+    for datas in data:
+        query = session.query(FoodSet).filter(FoodSet.settype == datas[1]).filter(FoodSet.breakfastbool == datas[2]).first()
+        if query is None:
+            session.add(datas[0])
     session.commit()
 
     update.message.reply_text("Bot Started") 
@@ -71,20 +77,29 @@ def main():
     dp.add_handler(conv_handler)
     dp.add_handler(CallbackQueryHandler(handle_home, pattern='^start.home'))
     dp.add_handler(CallbackQueryHandler(handle_help, pattern='^start.help'))
-    dp.add_handler(CallbackQueryHandler(handle_cumulativerating, pattern='start.cumulativerating'))
+
+    dp.add_handler(CallbackQueryHandler(handle_cumulativerating, pattern='^start.cumulativerating'))
+
     dp.add_handler(CallbackQueryHandler(handle_menu(timeofday = 'breakfast'), pattern='^menu.breakfast'))
     dp.add_handler(CallbackQueryHandler(handle_menu(timeofday = 'dinner'), pattern='^menu.dinner'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Self Service'), pattern='menuItem.selfservice'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Western'), pattern='menuItem.western'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Noodle'), pattern='menuItem.noodle'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Asian'), pattern='menuItem.asian'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Asian Vegetarian'), pattern='menuItem.asianveg'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Malay'), pattern='menuItem.malay'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Grab n go'), pattern='menuItem.grabngo'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Vegetarian'), pattern='menuItem.veg'))
-    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'Indian'), pattern='menuItem.indian'))
     
+    dp.add_handler(CallbackQueryHandler(handle_rating_number, pattern='^rate.western'))    
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 1), pattern='^westernrate.1'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 2), pattern='^westernrate.2'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 3), pattern='^westernrate.3'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 4), pattern='^westernrate.4'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 5), pattern='^westernrate.5'))
 
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'selfservice'), pattern='^menuItem.selfservice'))
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'western'), pattern='^menuItem.western'))
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'noodle'), pattern='^menuItem.noodle'))
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'asian'), pattern='^menuItem.asian'))
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'asianveg'), pattern='^menuItem.asianveg'))
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'malay'), pattern='^menuItem.malay'))
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'grabngo'), pattern='^menuItem.grabngo'))
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'vegetarian'), pattern='^menuItem.veg'))
+    dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'indian'), pattern='^menuItem.indian'))
+    
 
     # Start the Bot
     updater.start_polling()

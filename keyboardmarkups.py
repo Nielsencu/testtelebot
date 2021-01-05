@@ -1,5 +1,9 @@
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup)
 
+back_button = InlineKeyboardButton(text = "Back", callback_data = "start.home")
+
+def back_button_only():
+    return InlineKeyboardMarkup([[back_button]])
 
 def start_options():
     button_list = [
@@ -35,7 +39,6 @@ def menu_options(timeofday):
             InlineKeyboardButton(text = "Indian", callback_data = "menuItem.indian"),
         ]
     
-    back_button = InlineKeyboardButton(text = "Back", callback_data = "start.home")
     return InlineKeyboardMarkup(abstract_button(button_list,colnum = 2, footer = [back_button]))
 
 def menuItem_options(menuItem):
@@ -47,14 +50,24 @@ def menuItem_options(menuItem):
         colnum=1
     button_list = [
         InlineKeyboardButton(text = placeholder, callback_data = "menuItem.western.attach"),
-        InlineKeyboardButton(text = "Rate", callback_data = "menuItem.western.rate"),
+        InlineKeyboardButton(text = "Rate", callback_data = "rate.western"),
     ]     
 
-    back_button = InlineKeyboardButton(text = "Back", callback_data = "start.home")
+    return InlineKeyboardMarkup(abstract_button(button_list,colnum, footer = [back_button]))
+
+def rating_options():
+    button_list = [
+        InlineKeyboardButton(text = "1", callback_data = "westernrate.1"),
+        InlineKeyboardButton(text = "2", callback_data = "westernrate.2"),
+        InlineKeyboardButton(text = "3", callback_data = "westernrate.3"),
+        InlineKeyboardButton(text = "4", callback_data = "westernrate.4"),
+        InlineKeyboardButton(text = "5", callback_data = "westernrate.5"),
+    ]
+
+    colnum = 5
     return InlineKeyboardMarkup(abstract_button(button_list,colnum, footer = [back_button]))
 
 def abstract_button(button_list,colnum, footer = None, header = None):
-
 
     buttons = [button_list[i:i+colnum] for i in range(0, len(button_list),colnum)]
 

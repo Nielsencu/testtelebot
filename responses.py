@@ -5,8 +5,8 @@ def welcome_text(user_firstname):
 def menu_text():
     return f'Click to see items and rate!'
 
-def menuItem_text(menuItem):
-    return f'{menuItem} Menu Items\n\n' + f"Today's rating for {menuItem} is (rating)"
+def menuItem_text(menuItem, rating):
+    return f'{menuItem} Menu Items\n\n' + f"Today's rating for {menuItem} is {rating}"
 
 def cumulativeRating_text():
     return f"Here are the cumulative ratings of the menus this week"
