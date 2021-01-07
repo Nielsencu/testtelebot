@@ -48,17 +48,17 @@ def handle_menu(timeofday):
         return MAIN
     return send_message
 
-def handle_menu_item(menuItem):
-    menu = session.query(FoodSet).filter(FoodSet.settype == menuItem).first()
-    if menu is None:
-        rating = 'Menu not found'
-    else:
-        try:
-            rating = round(menu.rating/ menu.total_rater,2)
-        except ZeroDivisionError:
-            rating = 'null'
-    
+def handle_menu_item(menuItem):    
     def send_message(update,context):
+        menu = session.query(FoodSet).filter(FoodSet.settype == menuItem).first()
+        if menu is None:
+            rating = 'Menu not found'
+        else:
+            try:
+                rating = round(menu.rating/ menu.total_rater,2)
+            except ZeroDivisionError:
+                rating = 'null'
+
         now = dt.now()
         date_time = now.strftime("%Y%m%d")
         if menu is not None:
@@ -77,7 +77,6 @@ def handle_menu_item(menuItem):
     return send_message
 
 def handle_rating_number(menuItem):
-
     def ask_to_rate(update,context):
         context.bot.send_message(
             chat_id = update.effective_chat.id,
@@ -96,17 +95,12 @@ def handle_rating(menuItem,rating):
         if not(date_time == menu.last_rated_at):
             session.query(FoodSet).filter(FoodSet.settype == menuItem).update({"rating": FoodSet.rating + rating, "last_rated_at": date_time, "total_rater": FoodSet.total_rater + 1})
             session.commit()
-            return handle_menu_item(menuItem=menuItem)(update,context)
         else:
-            return handle_rated_already
-
-        """
-        session.query(FoodSet).filter(FoodSet.settype == menuItem).update({"rating": FoodSet.rating + rating, "total_rater": FoodSet.total_rater + 1})
-        session.commit()
+            context.bot.send_message(
+            chat_id = update.effective_chat.id,
+            text = "You have rated already!",
+            )
         return handle_menu_item(menuItem=menuItem)(update,context)
-        """
-        
-    
     return update_rating
 
 def handle_rated_already(update,context):
