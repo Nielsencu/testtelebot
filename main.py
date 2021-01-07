@@ -30,7 +30,7 @@ def start(update, context):
     session.add(user)
     for datas in data:
         query = session.query(FoodSet).filter(FoodSet.settype == datas[1]).filter(FoodSet.breakfastbool == datas[2]).first()
-        if query is None:
+        if query == None:
             session.add(datas[0])
     session.commit()
 
