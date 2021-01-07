@@ -14,7 +14,7 @@ def menuItem_text(menuItem, foodItems, rating, user_have_rated, number_people_ra
     else:
         addedText += '\nYou have not rated this menu yet!'
     if rating == 'null':
-        return addedText + f"\n\nCurrent rating: No ratings yet!" 
+        return f'<b>{menuItem} Menu Items:</b>\n\n'+ addedText + f"\n\nCurrent rating: No ratings yet!" 
     else:
         return f'<b>{menuItem} Menu Items:</b>\n\n' +  addedText + f"\n\nCurrent rating: ★<b> {rating}</b> ({number_people_rated})"
 

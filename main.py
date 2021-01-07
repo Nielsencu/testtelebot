@@ -88,12 +88,12 @@ def main():
     dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'selfservice',rating = 4), pattern='^selfservicerate.4'))
     dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'selfservice',rating = 5), pattern='^selfservicerate.5'))
 
-    dp.add_handler(CallbackQueryHandler(handle_rating_number(menuItem = 'noodle'), pattern='^rate.noodle'))    
-    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'noodle',rating = 1), pattern='^noodle.1'))
-    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'noodle',rating = 2), pattern='^noodle.2'))
-    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'noodle',rating = 3), pattern='^noodle.3'))
-    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'noodle',rating = 4), pattern='^noodle.4'))
-    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'noodle',rating = 5), pattern='^noodle.5'))
+    dp.add_handler(CallbackQueryHandler(handle_rating_number(menuItem = 'asian'), pattern='^rate.asian'))    
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 1), pattern='^asianrate.1'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 2), pattern='^asianrate.2'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 3), pattern='^asianrate.3'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 4), pattern='^asianrate.4'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 5), pattern='^asianrate.5'))
 
     dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'selfservice'), pattern='^menuItem.selfservice'))
     dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'western'), pattern='^menuItem.western'))

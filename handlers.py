@@ -90,18 +90,22 @@ def handle_rating_number(menuItem):
 def handle_rating(menuItem,rating):
     
     def update_rating(update,context):
+        now = dt.now()  # Rate only once a day
+        date_time = now.strftime("%Y%m%d")
+        menu = session.query(FoodSet).filter(FoodSet.settype == menuItem).first()
+        if not(date_time == menu.last_rated_at):
+            session.query(FoodSet).filter(FoodSet.settype == menuItem).update({"rating": FoodSet.rating + rating, "last_rated_at": date_time, "total_rater": FoodSet.total_rater + 1})
+            session.commit()
+            return handle_menu_item(menuItem=menuItem)(update,context)
+        else:
+            return handle_rated_already
 
+        """
         session.query(FoodSet).filter(FoodSet.settype == menuItem).update({"rating": FoodSet.rating + rating, "total_rater": FoodSet.total_rater + 1})
         session.commit()
         return handle_menu_item(menuItem=menuItem)(update,context)
         """
-        now = dt.now()  # Rate only once a day
-        date_time = now.strftime("%Y%m%d")
-        if not(date_time == menu.last_rated_at):
-            session.query(FoodSet).filter(FoodSet.settype == menuItem).update({"rating": FoodSet.rating + rating, "last_rated_at": date_time, "total_rater": FoodSet.total_rater + 1})
-            session.commit()
-        else:
-            return handle_rated_already"""
+        
     
     return update_rating
 
