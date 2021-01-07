@@ -9,7 +9,7 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, Call
                           ConversationHandler)
 from responses import (welcome_text)
 from keyboardmarkups import start_options
-from handlers import (handle_menu, handle_menu_item, handle_home, handle_help, handle_cumulativerating, handle_rating,handle_rating_number)
+from handlers import (handle_menu, handle_menu_item, handle_seeall, handle_home, handle_help, handle_cumulativerating, handle_rating,handle_rating_number)
 
 from config import SQL_SESSION
 session = SQL_SESSION
@@ -17,6 +17,7 @@ session = SQL_SESSION
 from models import FoodSet, User, FoodImage
 
 from mockdata import data
+
 
 MAIN = range(0)
 
@@ -44,16 +45,6 @@ def start(update, context):
 
     return MAIN
 
-
-def ping(update, context):
-    message = update.message.text
-    ping_count = message.count('ping')
-    
-    for i in range(ping_count):
-        update.message.reply_text("Pong")
-
-    return MAIN
-
 def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -68,7 +59,7 @@ def main():
         entry_points=[CommandHandler('start', start)],
 
         states={
-            MAIN: [MessageHandler(Filters.regex("ping"), ping)],
+            MAIN: [],
         },
 
         fallbacks=[]
@@ -77,18 +68,32 @@ def main():
     dp.add_handler(conv_handler)
     dp.add_handler(CallbackQueryHandler(handle_home, pattern='^start.home'))
     dp.add_handler(CallbackQueryHandler(handle_help, pattern='^start.help'))
-
+    dp.add_handler(CallbackQueryHandler(handle_seeall, pattern='^start.seeall'))
     dp.add_handler(CallbackQueryHandler(handle_cumulativerating, pattern='^start.cumulativerating'))
 
     dp.add_handler(CallbackQueryHandler(handle_menu(timeofday = 'breakfast'), pattern='^menu.breakfast'))
     dp.add_handler(CallbackQueryHandler(handle_menu(timeofday = 'dinner'), pattern='^menu.dinner'))
     
-    dp.add_handler(CallbackQueryHandler(handle_rating_number, pattern='^rate.western'))    
+    dp.add_handler(CallbackQueryHandler(handle_rating_number(menuItem = 'western'), pattern='^rate.western'))    
     dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 1), pattern='^westernrate.1'))
     dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 2), pattern='^westernrate.2'))
     dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 3), pattern='^westernrate.3'))
     dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 4), pattern='^westernrate.4'))
     dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'western',rating = 5), pattern='^westernrate.5'))
+
+    dp.add_handler(CallbackQueryHandler(handle_rating_number(menuItem = 'selfservice'), pattern='^rate.selfservice'))    
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'selfservice',rating = 1), pattern='^selfservicerate.1'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'selfservice',rating = 2), pattern='^selfservicerate.2'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'selfservice',rating = 3), pattern='^selfservicerate.3'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'selfservice',rating = 4), pattern='^selfservicerate.4'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'selfservice',rating = 5), pattern='^selfservicerate.5'))
+
+    dp.add_handler(CallbackQueryHandler(handle_rating_number(menuItem = 'asian'), pattern='^rate.asian'))    
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 1), pattern='^asianrate.1'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 2), pattern='^asianrate.2'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 3), pattern='^asianrate.3'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 4), pattern='^asianrate.4'))
+    dp.add_handler(CallbackQueryHandler(handle_rating(menuItem = 'asian',rating = 5), pattern='^asianrate.5'))
 
     dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'selfservice'), pattern='^menuItem.selfservice'))
     dp.add_handler(CallbackQueryHandler(handle_menu_item(menuItem = 'western'), pattern='^menuItem.western'))

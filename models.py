@@ -26,8 +26,8 @@ class FoodSet(Base):
     breakfastbool = Column(Boolean)
     picture = image_attachment('FoodImage')
     rating = Column(Integer, default=0)
-    last_rated_at = Column(String(100), default = '')
     total_rater = Column(Integer, default=0)
+    last_rated_at = Column(String(100), default = '')
     child = relationship("FoodImage", uselist=False, back_populates="parent")
 
 

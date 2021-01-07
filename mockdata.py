@@ -18,3 +18,4 @@ data = [
     (FoodSet(settype="malay", breakfastbool=False),"malay",False),
     (FoodSet(settype="indian", breakfastbool=False),"asian",False),
 ]
+
